@@ -6,7 +6,7 @@ Crea una función calcularBono(sueldo, aniosEnEmpresa) que devuelva el bono del 
     Si tiene menos de 2 años, el bono es 5% del sueldo 
 */
 function calcularBono(sueldo, aniosEnEmpresa){
-    const bono = 0;
+    let bono = 0;
     if(aniosEnEmpresa>=5){
         bono = sueldo * 0.15;
     }else if(aniosEnEmpresa>=2 && aniosEnEmpresa<=4){
@@ -29,15 +29,12 @@ La función debe:
     Usar la función esEmpleadoDestacado que ya creaste para evaluar a cada uno
     Mostrar en consola: Nombre: destacado o Nombre: regular
 */
+
 const clasificarEquipo = empleados => {
     for(const empleado of empleados){
-        for(const clave in empleado){
-            if(clave==="puntuacion"){
-                const respuestaEvaluada = esEmpleadoDestacado(empleado[clave]);
-                respuestaEvaluada ? "Destacado" : "Regular";
-                console.log(`${empleado[clave]}`);
-            }
-        }
+        const respuestaEvaluada = esEmpleadoDestacado(empleado["puntuacion"]);
+        const clasificacion = respuestaEvaluada ? "Destacado" : "Regular";
+        console.log(`${empleado.nombre}: ${clasificacion}`);
     }
 }
 
@@ -48,3 +45,26 @@ const equipo = [
     {nombre: "Martín", puntuacion: 91}
 ]
 clasificarEquipo(equipo);
+
+/*
+Crea una función contarDestacados(empleados) que devuelva cuántos empleados del array son destacados (usando esEmpleadoDestacado internamente dentro de un bucle)
+*/
+const contarDestacados = empleados => {
+    let contador = 0;
+    for(const empleado of empleados){
+        if(esEmpleadoDestacado(empleado["puntuacion"])){
+            contador++;
+        }
+    }
+    return contador;
+}
+const totalDestacados = contarDestacados(equipo);
+console.log(`Total de empleados destacados: ${totalDestacados}`);
+
+/* 
+Llama a calcularBono con al menos dos ejemplos distintos y muestra el resultado en consola
+*/
+const bonoNumero1 = calcularBono(1500,3);
+const bonoNumero2 = calcularBono(5925,8);
+console.log(`El primer bono es: ${bonoNumero1}`);
+console.log(`El segundo bono es: ${bonoNumero2}`);
