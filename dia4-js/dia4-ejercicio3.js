@@ -10,7 +10,7 @@ const reservas = [
 Precio base por asiento: 20 soles. Si es VIP, el precio por asiento sube a 35 soles.
 Crea una arrow function calcularPrecio(asientos, esVIP) que devuelva el precio total de una reserva.
 */
-const calcularPrecio = (asientos,esVIP) => asientos * (esVIP ? 35:25 );
+const calcularPrecio = (asientos,esVIP) => asientos * (esVIP ? 35:20 );
 
 /* 
 Crea una función aplicarDescuento(precio, asientos) que devuelva el precio con descuento aplicado:
@@ -37,7 +37,26 @@ const procesarReservas = function(listaReservas){
     for(const reserva of listaReservas){
         const precioTotal = calcularPrecio(reserva.asientos, reserva.esVIP);
         const precioConDesc = aplicarDescuento(precioTotal,reserva.asientos);
-        console.log()
+        console.log(`${reserva.pelicula} | ${reserva.asientos} asientos | Total: ${precioConDesc} soles`);
     }
 }
 
+/* 
+Crea una función totalRecaudado(listaReservas) que devuelva la suma de todos los precios finales (con descuento aplicado) de todas las reservas juntas
+*/
+const totalRecaudado = listaReservas => {
+    let recaudado = 0;
+    for(const reserva of listaReservas){
+        const precioTotal = calcularPrecio(reserva.asientos, reserva.esVIP);
+        const precioConDesc = aplicarDescuento(precioTotal,reserva.asientos);
+        recaudado+=precioConDesc;
+    }
+    return recaudado;
+}
+
+/*
+Llama a procesarReservas(reservas) y luego a totalRecaudado(reservas), mostrando el resultado final así: Total recaudado: 450 soles
+*/
+procesarReservas(reservas);
+const totalSoles = totalRecaudado(reservas);
+console.log(`Total recaudado: ${totalSoles} soles`);
