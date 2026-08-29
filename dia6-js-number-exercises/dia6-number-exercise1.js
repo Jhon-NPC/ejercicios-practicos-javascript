@@ -8,16 +8,16 @@ const codigoDescuentoInput = "diez"; // simulando un error del usuario
 
 /* Convierte precioInput a número decimal, y cantidadInput a número entero. Guarda cada uno en una nueva variable */
 const precioDecimal = parseFloat(precioInput);
-const precioEntero = parseInt(cantidadInput);
-console.log(`El precio es de ${precioDecimal} y la cantidad comprada es ${cantidadInput}`);
+const cantidadEntero = parseInt(cantidadInput);
+console.log(`El precio es de ${precioDecimal} y la cantidad comprada es ${cantidadEntero}`);
 
 /* Crea una función calcularSubtotal(precio, cantidad) que devuelva el precio multiplicado por la cantidad, usando .toFixed(2) para que el resultado tenga máximo 2 decimales */
 const calcularSubtotal = (precio, cantidad) => {
     const resultadoSubTotal = precio * cantidad;
-    resultadoFormateado = resultadoSubTotal.toFixed(2)
+    const resultadoFormateado = resultadoSubTotal.toFixed(2)
     return resultadoFormateado;
 }
-console.log(`Precio subtotal: ${calcularSubtotal(precioDecimal,precioEntero)}`);
+console.log(`Precio subtotal: ${calcularSubtotal(precioDecimal,cantidadEntero)}`);
 
 /* Intenta convertir codigoDescuentoInput con parseInt(). Usa isNaN() para verificar si la conversión fue válida. Si no lo fue, muestra "Código de descuento inválido, no se aplicó descuento". Si lo fue, muestra el descuento aplicado */
 const codigoDescEntero = parseInt(codigoDescuentoInput);
