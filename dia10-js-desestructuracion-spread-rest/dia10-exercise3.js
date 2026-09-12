@@ -28,6 +28,7 @@ console.log(`${nombreH} y ${tarjeta} guardas en variables individuales. "${Objec
 
 /* Crea una copia del objeto huesped llamada huespedActualizado, incrementando en 1 la cantidad de noches que ya tenía registradas */
 const huespedActualizado = {...huesped, noches:huesped.noches+1};
+console.log(`${Object.values(huespedActualizado)}`);
 
 /* Crea una función calcularCostoTotal que acepte cualquier cantidad de precios por noche como argumentos y devuelva la suma total. Pruébala con al menos 4 precios distintos */
 function calcularCostoTotal(...preciosPorNoche){
