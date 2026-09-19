@@ -7,10 +7,54 @@ const productos = [
 ];
 
 /* Crea una función que reciba cada producto (desestructurado directamente en sus parámetros) y construya su tarjeta visual completa dentro del catálogo: el nombre, el precio, y una imagen cuyo atributo de origen apunte al archivo indicado en los datos del producto, con un texto alternativo descriptivo generado a partir del nombre */
+const catalogo = document.getElementById("catalogo");
+const insertarProductos = ({nombre,precio,imagen,enStock,categoria}) =>{
 
+    //Creacion de un contenedor div para los productos
+    const tarjetaProducto = document.createElement("div");
+    tarjetaProducto.setAttribute("class","tarjeta-producto");
 
-/* Los productos con precio de 200 soles a más deben mostrar, dentro de su misma tarjeta, un distintivo adicional de "Premium", insertado como una etiqueta HTML real (no como texto plano) */
+    //Creacion de la etiqueta p para el nombre del producto
+    const nombreProducto = document.createElement("p");
+    nombreProducto.textContent = nombre;
+    nombreProducto.setAttribute("class","nombre-producto");
 
+    //Nueva etiqueta para precio
+    const precioProducto = document.createElement("p");
+    precioProducto.textContent = `S/. ${precio}`;
+    precioProducto.setAttribute("class","precio-producto");
+
+    //Nueva div y etiqueta para imagen
+    const contenedorImagenProducto = document.createElement("div");
+    contenedorImagenProducto.setAttribute("class","contenedor-imagen");
+
+    const imagenProducto = document.createElement("img");
+    imagenProducto.setAttribute("src",`assets/${imagen}`);
+    imagenProducto.setAttribute("alt",`Imagen referencial de ${imagen}`);
+    imagenProducto.style.width= "200px";
+
+    /* Los productos con precio de 200 soles a más deben mostrar, dentro de su misma tarjeta, un distintivo adicional de "Premium", insertado como una etiqueta HTML real (no como texto plano) */
+    const etiquetaPremium = document.createElement("p");
+    if(precio>=200){
+        etiquetaPremium.innerHTML = "<strong>Premium</strong>";
+    }
+
+    //Nueva etiqueta para categoria
+    const categoriaProducto = document.createElement("p");
+    categoriaProducto.textContent = categoria;
+    categoriaProducto.setAttribute("class","categoria-producto");
+
+    //Insercion de la tarjeta y el nombre del producto
+    catalogo.appendChild(tarjetaProducto);
+    tarjetaProducto.appendChild(nombreProducto);
+    tarjetaProducto.appendChild(precioProducto);
+    tarjetaProducto.appendChild(contenedorImagenProducto);
+    contenedorImagenProducto.appendChild(imagenProducto);
+    contenedorImagenProducto.appendChild(etiquetaPremium);
+    tarjetaProducto.appendChild(categoriaProducto);
+}
+
+productos.forEach(producto=>insertarProductos(producto));
 
 /* Los productos que no están en stock deben distinguirse visualmente del resto de alguna forma, y además el texto de su tarjeta debe indicar explícitamente que no está disponible */
 

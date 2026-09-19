@@ -1,4 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
 .urgente {
     color: red;
     font-weight: bold;
+}
+
+.nombre-producto{
+    font-weight: 700;
+}
+.precio-producto{
+    font-weight: 600;
+}
+.contenedor-imagen{
+    position: relative;
+    display: inline-block;
+}
+.contenedor-imagen p{
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: darkred;
+    background-color: lightblue;
+    border-radius: 5px;
+    padding: 4px 4px;
+    margin: 0;
+}
+.categoria-producto{
+    font-weight: 300;
 }
