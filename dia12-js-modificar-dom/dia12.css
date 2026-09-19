@@ -25,11 +25,21 @@
     top: 0;
     right: 0;
     color: darkred;
-    background-color: lightblue;
+    background-color: rgb(230, 226, 173);
     border-radius: 5px;
     padding: 4px 4px;
     margin: 0;
 }
 .categoria-producto{
     font-weight: 300;
+}
+.no-disponible{
+    color: grey;
+    font-weight: 500;
+}
+.sin-stock{
+    font-weight: 700;
+}
+#resumen-catalogo{
+    margin-top: 10px;
 }
