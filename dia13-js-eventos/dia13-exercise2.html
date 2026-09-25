@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resolución de ejercicios sobre eventos</title>
+        <link rel="stylesheet" href="dia13.css">
+    </head>
+    <body>
+        <h2>Organizador de tareas</h2>
+
+        <form id="form-tarea">
+            <input type="text" id="input-tarea" placeholder="Nueva tarea" required>
+            <select id="select-prioridad">
+                <option value="baja">Baja</option>
+                <option value="media">Media</option>
+                <option value="alta">Alta</option>
+            </select>
+            <button type="submit">Agregar</button>
+        </form>
+
+        <input type="text" id="buscador" placeholder="Buscar tarea...">
+
+        <div id="lista-tareas"></div>
+        <p id="resumen-tareas"></p>
+
+        <script src="dia13-eventos-exercise2.js"></script>
+    </body>
+</html>

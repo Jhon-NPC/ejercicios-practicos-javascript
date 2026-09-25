@@ -1,0 +1,26 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.prioridad-baja{
+    color: green;
+}
+.prioridad-media{
+    color: orange;
+}
+.prioridad-alta{
+    color: red;
+    font-weight: 800;
+}
+.completada-true{
+    color: grey;
+    font-weight: 400;
+}
+.completada-false{
+    font-weight: 700;
+}
+.completada-false-texto{
+    color: orangered;
+}
