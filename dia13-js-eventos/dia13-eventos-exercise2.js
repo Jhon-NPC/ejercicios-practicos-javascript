@@ -126,7 +126,9 @@ buscador.addEventListener("input",()=>{
     */
     tareas.forEach(tarea => {
         if(!tarea.texto.toLowerCase().includes(buscador.value.toLowerCase())){
-            
+            document.getElementById(tarea.texto).parentElement.style.display = "none";
+        }else{
+            document.getElementById(tarea.texto).parentElement.style.display = "";
         };
     });
 });
