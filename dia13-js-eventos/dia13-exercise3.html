@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resolucion de ejercicios sobre eventos</title>
+    </head>
+    <body>
+        <h2>Gestor de gastos</h2>
+
+        <form id="form-gasto">
+            <input type="text" id="input-descripcion" placeholder="Descripción" required>
+            <input type="number" id="input-monto" placeholder="Monto" required>
+            <select id="select-categoria">
+                <option value="comida">Comida</option>
+                <option value="transporte">Transporte</option>
+                <option value="ocio">Ocio</option>
+            </select>
+            <button type="submit">Agregar gasto</button>
+        </form>
+
+        <input type="text" id="buscador" placeholder="Buscar gasto...">
+
+        <div id="lista-gastos"></div>
+        <p id="resumen-gastos"></p>
+
+        <script src="dia13-eventos-exercise3.js"></script>
+    </body>
+</html>
