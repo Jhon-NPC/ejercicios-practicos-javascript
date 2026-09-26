@@ -65,7 +65,7 @@ function crearTarjetaPorTarea(tarea){
         tarea.completada = !tarea.completada;
         completadaTarea.textContent = tarea.completada ? "Completado":"¡Pendiente!";
         btnEstado.textContent = !tarea.completada?"Finalizar tarea":"Reiniciar tarea";
-        console.log(`La tarea ${evento.target.parentElement.children[0].textContent} ha sufrido un cambio.`)
+        console.log(`La tarea ${tarea.texto} ha sufrido un cambio.`)
         actualizarResumen();
 
         if(tarea.completada){
@@ -125,10 +125,11 @@ buscador.addEventListener("input",()=>{
     });
     */
     tareas.forEach(tarea => {
+        const tarjeta = document.getElementById(`tarjeta-tarea-${tarea.id}`);
         if(!tarea.texto.toLowerCase().includes(buscador.value.toLowerCase())){
-            document.getElementById(tarea.texto).parentElement.style.display = "none";
+            tarjeta.style.display = "none";
         }else{
-            document.getElementById(tarea.texto).parentElement.style.display = "";
+            tarjeta.style.display = "";
         };
     });
 });
