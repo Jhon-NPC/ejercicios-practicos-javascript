@@ -23,6 +23,7 @@ function ordenarGastos(gastos){
 }
 
 const mostrarGastos = (gastos) => {
+    divListaGastos.innerHTML = "";
     const gastosOrdenados = ordenarGastos(gastos);
     gastosOrdenados.forEach(gasto => crearTarjetaGastos(gasto));
     agregarbtnEditar();
@@ -38,12 +39,13 @@ function crearTarjetaGastos(gasto){
     const montoGasto = document.createElement("p");
     const categoriaGasto = document.createElement("p");
     const tarjetaGasto = document.createElement("div");
-    tarjetaGasto.setAttribute("class","gasto-item")
+    tarjetaGasto.setAttribute("class","gasto-item");
+    tarjetaGasto.setAttribute("id",gasto.id);
     descripcionGasto.setAttribute("class","descripcion");
 
     //Insertando contenido dentro de las etiquetas
     descripcionGasto.textContent = gasto.descripcion;
-    montoGasto.textContent = gasto.monto;
+    montoGasto.textContent = `S/. ${gasto.monto}`;
     categoriaGasto.textContent = gasto.categoria;
 
     //Incrustando los nuevos elementos al DOM
@@ -60,13 +62,39 @@ function agregarbtnEditar(){
         const btnEditar = document.createElement("button");
         btnEditar.setAttribute("type","button");
         btnEditar.textContent = "Editar descripción";
-        agregarBtnEliminarEvento(btnEditar);
+        agregarbtnEditarEvento(btnEditar);
         gasto.appendChild(btnEditar);
     });
 }
+
 function agregarbtnEditarEvento(boton){
     boton.addEventListener("click",(evento)=>{
-        
+        //Obteniendo el elemento parrafo 
+        const parrafo = evento.target.parentElement.querySelector(".descripcion");
+        const idGasto = Number(evento.target.parentElement.getAttribute("id"));
+        if(!parrafo) return;
+        const gastoBuscado = gastos.find(gasto=>gasto.id===idGasto);
+
+        //Creando y reemplazando por el input
+        const nuevoInput = document.createElement("input");
+        nuevoInput.setAttribute("id",`campo-texto-${gastoBuscado.id}`);
+        nuevoInput.setAttribute("type","text");
+        nuevoInput.setAttribute("value",parrafo.textContent);
+        parrafo.replaceWith(nuevoInput);
+
+        //Agregando evento al input
+        nuevoInput.addEventListener("keydown",(evento)=>{
+            if(evento.key === "Enter"){
+                const valorIngresado = evento.target.value.trim();
+                if(valorIngresado !== ""){
+                    gastoBuscado.descripcion = valorIngresado;
+                    mostrarGastos(gastos);
+                }else{
+                    evento.target.value = "Campo vacio...";
+                }
+            }
+        });
+        console.log(parrafo);
     });
 }
 
@@ -86,13 +114,13 @@ function agregarBtnEliminarEvento(){
     const botonesElimnar = document.querySelectorAll(".btn-eliminar");
     botonesElimnar.forEach(boton => {
         boton.addEventListener("click", (evento)=>{
-            const descripcionGasto = evento.target.parentElement.querySelector(".descripcion").textContent;
+            const idGasto = Number(evento.target.parentElement.getAttribute("id"));
             for (const gasto of gastos) {
-                if(gasto.descripcion===descripcionGasto){
+                if(gasto.id===idGasto){
+                    console.log(`Gasto eliminado: ${gasto.descripcion}`);
                     gastos.splice(gastos.indexOf(gasto), 1);
                 }
             }
-            console.log(`Gasto eliminado: ${descripcionGasto}`);
             evento.target.parentElement.remove();
             mostrarResumenGastos();
         });
