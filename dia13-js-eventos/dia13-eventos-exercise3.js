@@ -72,7 +72,6 @@ function agregarbtnEditarEvento(boton){
         //Obteniendo el elemento parrafo 
         const parrafo = evento.target.parentElement.querySelector(".descripcion");
         const idGasto = Number(evento.target.parentElement.getAttribute("id"));
-        if(!parrafo) return;
         const gastoBuscado = gastos.find(gasto=>gasto.id===idGasto);
 
         //Creando y reemplazando por el input
@@ -89,12 +88,12 @@ function agregarbtnEditarEvento(boton){
                 if(valorIngresado !== ""){
                     gastoBuscado.descripcion = valorIngresado;
                     mostrarGastos(gastos);
+                    mostrarResumenGastos();
                 }else{
                     evento.target.value = "Campo vacio...";
                 }
             }
         });
-        console.log(parrafo);
     });
 }
 
@@ -128,6 +127,36 @@ function agregarBtnEliminarEvento(){
 }
 
 /* El formulario debe validar, antes de agregar el gasto, que el monto ingresado sea un número mayor a 0 — si no lo es, no debe agregarse ningún gasto y debe mostrarse una advertencia visible en la página (no basta con un mensaje en consola) */
+const formulario = document.getElementById("form-gasto");
+function insertarNuevaTarea(){
+    formulario.addEventListener("submit",(evento)=>{
+        const usuarioDescripcionGasto = document.getElementById("input-descripcion");
+        const usuarioMontoGasto = document.getElementById("input-monto");
+        const usuarioCategorioGasto = document.getElementById("select-categoria");
+
+        const mensajeError = document.getElementById("mensaje-error");
+        if(!mensajeError){
+            mensaje= document.createElement("p");
+            mensaje.setAttribute("id","mensaje-error");
+            formulario.appendChild(mensaje);
+        }
+
+        if(parseFloat(usuarioMontoGasto.value)<=0){
+            mensaje.innerHTML = `<strong>Monto menor o igual a 0 no permitido</strong>`;
+        }else{
+            mensaje.textContent = "";
+            const idMayor = gastos.length>0 ? Math.max(...gastos.map(gasto=>gasto.id))+1: 1;
+            gastos.push({id:idMayor, descripcion: usuarioDescripcionGasto.value, monto: Number(usuarioMontoGasto.value), categoria: usuarioCategorioGasto.value});
+            formulario.reset();
+            mostrarGastos(gastos);
+            mostrarResumenGastos();
+            console.log(idMayor);
+        }
+        evento.preventDefault();
+    });
+}
+
+insertarNuevaTarea();
 
 /* El resumen debe mostrar el total gastado, y además el monto total gastado específicamente en la categoría "comida", recalculándose tras cualquier cambio (agregar, eliminar o editar) */
 const resumenGastos = document.getElementById("resumen-gastos");
@@ -138,3 +167,25 @@ function mostrarResumenGastos(){
 }
 
 mostrarResumenGastos();
+
+/* Extra no evaluar, buscar por nombre de gasto */
+const buscador = document.getElementById("buscador");
+function buscadorGasto(){
+    buscador.addEventListener("input",(evento)=>{
+        const gastoItems = document.querySelectorAll(".gasto-item");
+        const gastoIngresado = evento.target.value.toLowerCase();
+        gastos.forEach(gasto=>{
+            if(!gasto.descripcion.toLowerCase().includes(gastoIngresado)){
+                gastoItems.forEach(item=> {
+                    if(parseInt(item.getAttribute("id")) === gasto.id){
+                        item.style.display = "none";
+                        mostrarResumenGastos();
+                    }
+                });
+            }else if(gastoIngresado===""){
+                mostrarGastos(gastos);
+            }
+        });
+    });
+}
+buscadorGasto();
