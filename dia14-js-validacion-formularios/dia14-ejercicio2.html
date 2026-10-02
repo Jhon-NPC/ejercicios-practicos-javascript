@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resolucion de ejercicios sobre validaciones de formularios</title>
+        <link rel="stylesheet" href="dia14-ejercicio2.css">
+
+    </head>
+    <body>
+        <h2>Registro de contactos</h2>
+        <form id="form-contacto">
+            <input type="text" id="nombre-contacto" placeholder="Nombre">
+            <input type="text" id="email-contacto" placeholder="Correo electrónico">
+            <input type="text" id="telefono-contacto" placeholder="Teléfono (9 dígitos)">
+            <label><input type="checkbox" id="favorito-contacto"> Marcar como favorito</label>
+            <button type="submit">Agregar contacto</button>
+        </form>
+        <div id="contenedorErrores"></div>
+        <div id="lista-contactos"></div>
+        <p id="resumen-contactos"></p>
+
+        <script src="dia14-js-validaciones-2.js"></script>
+    </body>
+</html>
