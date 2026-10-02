@@ -23,7 +23,7 @@ function validarFormulario(){
     }
 
     const formatoNumero = /^\d{9}$/;
-    if(!formatoNumero.test(parseInt(telefonoContacto.value.trim()))){
+    if(!formatoNumero.test(telefonoContacto.value.trim())){
         mensaje = "Campo telefono: Ingrese solamente 9 dígitos del teléfono";
         console.log(mensaje);
         errores.push(mensaje);
@@ -34,6 +34,7 @@ function validarFormulario(){
 
 const formulario = document.getElementById("form-contacto");
 const listaContactos = document.getElementById("lista-contactos");
+
 formulario.addEventListener("submit", (e) => {
     e.preventDefault();
     const errores = validarFormulario();
@@ -55,10 +56,20 @@ formulario.addEventListener("submit", (e) => {
         const esFavorito = document.getElementById("favorito-contacto").checked;
         const idAsignado = contactos.length>0 ? contactos[contactos.length-1].id +1 : 1;
 
-        contactos.push({id: idAsignado, nombre: nombreContacto, email: emailContacto, telefono: telefonoContacto, favorito: esFavorito});
+        /* Si se intenta agregar un contacto cuyo email ya existe en el array (sin importar mayúsculas o minúsculas), debe rechazarse con un mensaje de error específico indicando que ese correo ya está registrado, sin llegar a agregarlo */
+        const esEmailIgual = contactos.some(contacto => contacto.email.toLowerCase() === emailContacto.toLowerCase());
+        if(esEmailIgual){
+            const mensajeEmailIgual = document.createElement("p");
+            mensajeEmailIgual.textContent = "El correo ingresado ya existe";
+            mensajeEmailIgual.classList.add("mensaje-email-igual");
+            contenedorErrores.appendChild(mensajeEmailIgual);
+        }else{
+            contactos.push({id: idAsignado, nombre: nombreContacto, email: emailContacto, telefono: telefonoContacto, favorito: esFavorito});
 
-        crearContactoIndividual(idAsignado,nombreContacto,emailContacto,telefonoContacto,esFavorito);
-        console.log(contactos);
+            crearContactoIndividual(idAsignado,nombreContacto,emailContacto,telefonoContacto,esFavorito);
+            console.log(contactos);
+            formulario.reset();
+        }
     }
 });
 
@@ -73,8 +84,24 @@ function crearContactoIndividual(id,nombre,email,telefono,esFavorito){
         <p class=nombre${esFavorito?"-favorito":""}>${nombre}</p>
         <p class=email>${email}</p>
         <p class=telefono>${telefono}</p>
+        <button type="button">Eliminar contacto</button>
     `;
+
+    /* Cada contacto debe tener un botón para eliminarlo, que lo quite tanto del array como de la vista, y recalcule el resumen de inmediato */
+    const btnEliminar = contenidoContacto.querySelector("button");
+    btnEliminar.addEventListener("click", (e) =>{
+        console.log(e.target.parentElement);
+        e.target.parentElement.remove();
+        const contactoEncontrado = contactos.findIndex(contacto=>contacto.id===id);
+        if(contactoEncontrado!==-1){
+            contactos.splice(contactoEncontrado,1);
+            actualizarResumen();
+            console.log(contactos);
+        }
+    });
+
     listaContactos.appendChild(contenidoContacto);
+    actualizarResumen();
 }
 
 function crearTarjetasContactos(contactos){
@@ -90,11 +117,11 @@ function crearTarjetasContactos(contactos){
     });
 }
 
-/* Cada contacto debe tener un botón para eliminarlo, que lo quite tanto del array como de la vista, y recalcule el resumen de inmediato */
-
 /* Debajo de la lista, el resumen debe mostrar cuántos contactos hay en total y cuántos son favoritos, actualizándose automáticamente tras agregar o eliminar */
 const resumenContacto = document.getElementById("resumen-contactos");
-const favoritos = contactos.reduce((acumulador,contacto)=>contacto.favorito? acumulador+1:acumulador,0);
-resumenContacto.textContent = `Total de contactos: ${contactos.length} | Total de favoritos: ${favoritos}`;
+function actualizarResumen(){
+    const favoritos = contactos.reduce((acumulador,contacto)=>contacto.favorito ? acumulador+1 : acumulador, 0);
+    resumenContacto.textContent = `Total de contactos: ${contactos.length} | Total de favoritos: ${favoritos}`;
+}
 
-/* Si se intenta agregar un contacto cuyo email ya existe en el array (sin importar mayúsculas o minúsculas), debe rechazarse con un mensaje de error específico indicando que ese correo ya está registrado, sin llegar a agregarlo */
+actualizarResumen();

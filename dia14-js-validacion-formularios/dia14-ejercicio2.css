@@ -8,3 +8,7 @@
     content: ★;
     color: tomato;
 }
+.mensaje-email-igual{
+    color: red;
+    font-weight: 700;
+}
