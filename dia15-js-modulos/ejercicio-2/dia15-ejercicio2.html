@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resolución de ejercicios con modulos</title>
+    </head>
+    <body>
+        <h2>Cotizador de planes</h2>
+        <form id="form-cotizacion">
+            <input type="text" id="nombre-cliente" placeholder="Nombre">
+            <input type="text" id="email-cliente" placeholder="Correo electrónico">
+            <select id="select-plan">
+                <option value="basico">Básico</option>
+                <option value="pro">Pro</option>
+                <option value="premium">Premium</option>
+            </select>
+            <input type="number" id="meses" placeholder="Duración en meses">
+            <label><input type="checkbox" value="dominio"> Dominio gratis</label>
+            <label><input type="checkbox" value="soporte"> Soporte prioritario</label>
+            <label><input type="checkbox" value="backup"> Backup diario</label>
+            <button type="submit">Cotizar</button>
+        </form>
+        <div id="contenedorErrores"></div>
+        <div id="lista-cotizaciones"></div>
+        <p id="resumen-cotizaciones"></p>
+
+        <script src="principal.js" type="module"></script>
+    </body>
+</html>
