@@ -14,8 +14,11 @@ const descuento = 10;
 let resultado = null;
 
 const resultadoCalcularTotal = calcularTotal(producto,unidades);
+console.log(`Unidades compradas por precio del producto: ${resultadoCalcularTotal}`);
 const resultadoDescuento = descontar(resultadoCalcularTotal,descuento);
-const resultadoIVA = calcularTotal(resultadoDescuento,IVA);
+console.log(`Descuento aplicado a la compra: ${resultadoDescuento}`);
+const resultadoIVA = resultadoDescuento * IVA;
+console.log(`IVA del precio a pagar: ${resultadoIVA}`);
 resultado = resultadoIVA+resultadoDescuento;
 console.log(`El resultado final es: ${resultado}`);
 
