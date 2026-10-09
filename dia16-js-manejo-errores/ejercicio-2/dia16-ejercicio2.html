@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Manejo de errores</title>
+    </head>
+    <body>
+        <h2>Importador de productos</h2>
+
+        <textarea id="entrada-json" rows="8" cols="70"></textarea>
+        <br>
+        <button type="button" id="btn-importar">Importar productos</button>
+
+        <p id="estado"></p>
+        <div id="mensaje-general"></div>
+
+        <label>Filtrar aceptados por categoría:
+            <select id="filtro-categoria">
+                <option value="todas">Todas</option>
+            </select>
+        </label>
+
+        <h3>Productos aceptados</h3>
+        <div id="lista-aceptados"></div>
+
+        <h3>Productos rechazados</h3>
+        <div id="lista-rechazados"></div>
+
+        <p id="resumen"></p>
+
+        <script type="module" src="principal.js"></script>
+    </body>
+</html>
