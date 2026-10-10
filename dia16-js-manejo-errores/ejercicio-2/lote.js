@@ -1,5 +1,11 @@
 /* Importa validarProducto desde validaciones.js y exporta por defecto una función procesarLote(lista) que recibe un array de elementos y devuelve un objeto con dos propiedades */
 
+import { validarProducto } from "./validaciones.js";
+
+export default function procesarLote(lista){
+    
+}
+
 /* aceptados: un array con los productos que pasaron la validación */
 
 /* rechazados: un array de objetos, uno por cada elemento rechazado, con la posicion que ocupaba en la lista original (empezando desde 1) y el motivo del rechazo */

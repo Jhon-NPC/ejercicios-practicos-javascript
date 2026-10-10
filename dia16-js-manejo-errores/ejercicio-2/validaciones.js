@@ -1,8 +1,7 @@
-/* Debe exportar con exportación nombrada */
+/* Debes exportar con exportación nombrada: 
+Una constante CATEGORIAS_PERMITIDAS, con este valor exacto: ["accesorios", "audio", "computo"] 
+Una función validarProducto(producto) que lanza un error ante el primer problema que encuentre, revisando en este orden, y devuelve true si el producto es válido */
 
-/* Una constante CATEGORIAS_PERMITIDAS, con este valor exacto: ["accesorios", "audio", "computo"] */
-
-/* Una función validarProducto(producto) que lanza un error ante el primer problema que encuentre, revisando en este orden, y devuelve true si el producto es válido */
 
 /* | # | Condición | Tipo de error | Mensaje exacto |
 | --- | --- | --- | --- |
@@ -13,3 +12,41 @@
 | 5 | El stock no es un número | TypeError | El stock debe ser un número |
 | 6 | El stock es menor a 0 | RangeError | El stock no puede ser negativo |
 | 7 | La categoría no está en CATEGORIAS_PERMITIDAS (comparación exacta, sin cambiar mayúsculas) | Error | La categoría "X" no está permitida |*/
+
+export const categoriasPermitidas = ["accesorios", "audio", "computo"];
+export function validarProducto(producto){
+    const errores = [];
+
+    producto.forEach((p)=>{
+        if(p === null){
+            errores.push(new TypeError("El elemento no es un producto válido"));
+            return;
+        }
+        if(p.nombre.trim() === "" || typeof p.nombre !== "string" || p.nombre === null){
+            errores.push(new Error("El nombre del producto no es válido"));
+            return;
+        }
+        if(isNaN(parseFloat(p.precio))){
+            errores.push(new TypeError("El precio debe ser un número"));
+            return;
+        }
+        if(p.precio<=0){
+            errores.push(new RangeError("El precio debe ser mayor a 0"));
+            return;
+        }
+        if(isNaN(parseInt(p.stock))  || !Number.isInteger(Number(p.stock))){
+            errores.push(new TypeError("El stock debe ser un número entero"));
+            return;
+        }
+        if(Number(p.stock)<0){
+            errores.push(new RangeError("El stock no puede ser negativo "));
+            return;
+        }
+        if(!categoriasPermitidas.some(c => {p.categoria === c}) ){
+            errores.push(new Error(`La categoría ${p.categoria} no está permitida`));
+            return;
+        }
+        errores.push(true);
+    });
+    return errores;
+}
