@@ -15,38 +15,27 @@ Una función validarProducto(producto) que lanza un error ante el primer problem
 
 export const categoriasPermitidas = ["accesorios", "audio", "computo"];
 export function validarProducto(producto){
-    const errores = [];
 
-    producto.forEach((p)=>{
-        if(p === null){
-            errores.push(new TypeError("El elemento no es un producto válido"));
-            return;
-        }
-        if(p.nombre.trim() === "" || typeof p.nombre !== "string" || p.nombre === null){
-            errores.push(new Error("El nombre del producto no es válido"));
-            return;
-        }
-        if(isNaN(parseFloat(p.precio))){
-            errores.push(new TypeError("El precio debe ser un número"));
-            return;
-        }
-        if(p.precio<=0){
-            errores.push(new RangeError("El precio debe ser mayor a 0"));
-            return;
-        }
-        if(isNaN(parseInt(p.stock))  || !Number.isInteger(Number(p.stock))){
-            errores.push(new TypeError("El stock debe ser un número entero"));
-            return;
-        }
-        if(Number(p.stock)<0){
-            errores.push(new RangeError("El stock no puede ser negativo "));
-            return;
-        }
-        if(!categoriasPermitidas.some(c => {p.categoria === c}) ){
-            errores.push(new Error(`La categoría ${p.categoria} no está permitida`));
-            return;
-        }
-        errores.push(true);
-    });
-    return errores;
+    if(producto === null){
+        throw new TypeError("El elemento no es un producto válido");
+    }
+    if(typeof producto.nombre !== "string" || producto.nombre.trim() === "" || producto.nombre === null){
+        throw new Error("El nombre del producto no es válido");
+    }
+    if(isNaN(parseFloat(producto.precio))){
+        throw new TypeError("El precio debe ser un número");
+    }
+    if(producto.precio<=0){
+        throw new RangeError("El precio debe ser mayor a 0");
+    }
+    if(isNaN(parseInt(producto.stock))  || !Number.isInteger(Number(producto.stock))){
+        throw new TypeError("El stock debe ser un número entero");
+    }
+    if(Number(producto.stock)<0){
+        throw new RangeError("El stock no puede ser negativo");
+    }
+    if(!categoriasPermitidas.some(c => (producto.categoria === c)) ){
+        throw new Error(`La categoría ${producto.categoria} no está permitida`);
+    }
+    return true;
 }

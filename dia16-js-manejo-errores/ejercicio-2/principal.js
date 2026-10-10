@@ -1,13 +1,24 @@
 /* Importa procesarLote (la exportación por defecto de lote.js) y CATEGORIAS_PERMITIDAS (de validaciones.js) */
+import procesarLote from "./lote.js";
+import { categoriasPermitidas } from "./validaciones.js";
 
 /* Las opciones del filtro de categoría (además de “Todas”, que ya está en el HTML) deben generarse desde CATEGORIAS_PERMITIDAS, no escribirse a mano en el HTML. El texto visible de cada opción lleva la primera letra en mayúscula (por ejemplo, Accesorios) */
 
+const filtroCategoria = document.getElementById("filtro-categoria");
+
+categoriasPermitidas.forEach((categoria => {
+    const filtro = document.createElement("option");
+    filtro.setAttribute("value",categoria);
+    filtro.textContent = categoria.slice(0,1).toUpperCase() + categoria.slice(1);
+    filtroCategoria.appendChild(filtro);
+}));
+
 /* Al hacer clic en el botón de importar:
-Se limpian por completo los mensajes, las dos listas y el resumen de la importación anterior
-El párrafo estado muestra Importando... antes de empezar, y Importación terminada al finalizar, haya salido bien o mal
-Se convierte el texto del <textarea> en un objeto
-Si el JSON es válido pero no contiene la propiedad productos (por ejemplo, si el texto es null, un número, o un objeto sin esa propiedad), lanza un Error propio con el mensaje El JSON no contiene la propiedad productos
-Se llama a procesarLote con la lista de productos, y se extraen aceptados y rechazados del resultado */
+- Se limpian por completo los mensajes, las dos listas y el resumen de la importación anterior
+- El párrafo estado muestra Importando... antes de empezar, y Importación terminada al finalizar, haya salido bien o mal
+- Se convierte el texto del <textarea> en un objeto
+- Si el JSON es válido pero no contiene la propiedad productos (por ejemplo, si el texto es null, un número, o un objeto sin esa propiedad), lanza un Error propio con el mensaje El JSON no contiene la propiedad productos
+- Se llama a procesarLote con la lista de productos, y se extraen aceptados y rechazados del resultado */
 
 /* Todo error que llegue a este nivel se maneja según su tipo (comparando error.name), y siempre se registra además con console.error(error):
 SyntaxError → mensaje en mensaje-general: El texto no tiene formato JSON válido
