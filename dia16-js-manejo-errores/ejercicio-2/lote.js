@@ -11,7 +11,7 @@ export default function procesarLote(lista){
     lista.forEach( (p,index) => {
         try{
             validarProducto(p);
-            aceptados.push({producto: p})
+            aceptados.push(p);
         }catch (error){
             if(error.name === "Error" || error.name === "TypeError" || error.name === "RangeError"){
                 rechazados.push({posicion: index+1, motivo: error.message});

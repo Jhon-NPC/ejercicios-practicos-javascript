@@ -20,22 +20,105 @@ categoriasPermitidas.forEach((categoria => {
 - Si el JSON es válido pero no contiene la propiedad productos (por ejemplo, si el texto es null, un número, o un objeto sin esa propiedad), lanza un Error propio con el mensaje El JSON no contiene la propiedad productos
 - Se llama a procesarLote con la lista de productos, y se extraen aceptados y rechazados del resultado */
 
-/* Todo error que llegue a este nivel se maneja según su tipo (comparando error.name), y siempre se registra además con console.error(error):
-SyntaxError → mensaje en mensaje-general: El texto no tiene formato JSON válido
-Error → muestra en mensaje-general el message del error
-Cualquier otro tipo → mensaje en mensaje-general: Ocurrió un error inesperado. Revisa la consola. (en este nivel no se vuelve a lanzar) */
+const btnImportar = document.getElementById("btn-importar");
+const mensajeGeneral = document.getElementById("mensaje-general");
+const listaAceptados = document.getElementById("lista-aceptados");
+const listaRechazados = document.getElementById("lista-rechazados");
+const resumen = document.getElementById("resumen");
+const parrafoEstado = document.getElementById("estado");
+const textoEntrada = document.getElementById("entrada-json");
+
+btnImportar.addEventListener("click",()=>{
+    mensajeGeneral.innerHTML = "";
+    listaAceptados.innerHTML = "";
+    listaRechazados.innerHTML = "";
+    resumen.innerHTML = "";
+    try{
+        parrafoEstado.textContent = "Importando";
+        const objetoConvertido = JSON.parse(textoEntrada.value);
+
+        if(!objetoConvertido.hasOwnProperty("productos")){
+            throw new Error("El JSON no contiene la propiedad productos");
+        }
+
+        const {aceptados, rechazados} = procesarLote(objetoConvertido.productos);
+        productosAceptados(aceptados);
+        productosRechazados(rechazados);
+
+    }catch(error){
+        
+        /* Todo error que llegue a este nivel se maneja según su tipo (comparando error.name), y siempre se registra además con console.error(error):
+        SyntaxError → mensaje en mensaje-general: El texto no tiene formato JSON válido
+        Error → muestra en mensaje-general el message del error
+        Cualquier otro tipo → mensaje en mensaje-general: Ocurrió un error inesperado. Revisa la consola. (en este nivel no se vuelve a lanzar) */
+
+        if(error.name === "SyntaxError"){
+            mensajeGeneral.innerHTML = `<p>El texto no tiene formato JSON válido</p>`
+            console.error(error);
+        }else
+        if(error.name === "Error"){
+            mensajeGeneral.innerHTML = `<p>${error.message}</p>`
+            console.error(error);
+        }else{
+            mensajeGeneral.innerHTML = `<p>Ocurrió un error inesperado. Revisa la consola</p>`
+            console.error(error.message);
+        }
+    }finally{
+        parrafoEstado.textContent = "Importación terminada";
+    }
+
+})
 
 /* Cada producto aceptado se muestra en lista-aceptados con este formato: nombre, precio con exactamente 2 decimales, stock y categoría con la primera letra en mayúscula:
     Mouse inalámbrico
     S/. 45.50
     Stock: 12
     Categoría: Accesorios
-
+    
 Los productos con stock igual a 0 deben distinguirse visualmente del resto y mostrar además el texto Sin stock */
+
+function productosAceptados(lista){
+    lista.forEach((p, index) => {
+        const itemAceptado = document.createElement("div");
+        itemAceptado.id = `item-producto-${index+1}`;
+        itemAceptado.innerHTML = `<p>${p.nombre}</p>
+            <p>S/. ${p.precio.toFixed(2)}</p>
+            <p ${p.stock===0 ? `class=sin-stock`: ""}>Stock: ${p.stock===0 ? "Sin stock" : p.stock}</p>
+            <p class=${p.categoria} >Categoría: ${p.categoria.charAt(0).toUpperCase()+p.categoria.slice(1)}</p>`;
+        listaAceptados.appendChild(itemAceptado);
+    });
+}
 
 /* Cada producto rechazado se muestra en lista-rechazados con este formato: Producto #3: El nombre del producto no es válido */
 
+function productosRechazados(lista){
+    lista.forEach(r => {
+        const itemRechazado = document.createElement("div");
+        itemRechazado.innerHTML = `<p>Producto #${r.posicion}: ${r.motivo}</p>`;
+        listaRechazados.appendChild(itemRechazado);
+    });
+}
+
 /* Al cambiar la opción del filtro de categoría, solo deben permanecer visibles las tarjetas de productos aceptados de esa categoría (Todas muestra todas). Las demás se ocultan sin eliminarse. Después de cada importación, el filtro que esté seleccionado en ese momento debe seguir aplicándose a las tarjetas recién creadas */
+
+filtroCategoria.addEventListener("change", () => {
+    console.log(filtroCategoria.value);
+
+    switch(filtroCategoria.value){
+        case "todas":
+            break;
+        case "accesorios":
+            
+            break;
+        case "audio":
+            break;
+        case "computo":
+            break;
+        default:
+            mensajeGeneral.innerHTML = "<p>Categoria no encontrada</p>";
+            break;
+    }
+})
 
 /* El resumen (que no cambia con el filtro) muestra, con este formato:
     Aceptados: 3 | Rechazados: 6 | Valor total del inventario aceptado: S/. 8046.00 | Producto más caro: Laptop
