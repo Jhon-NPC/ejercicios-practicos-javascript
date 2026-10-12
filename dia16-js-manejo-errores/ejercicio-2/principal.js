@@ -30,6 +30,7 @@ const textoEntrada = document.getElementById("entrada-json");
 
 btnImportar.addEventListener("click",()=>{
     mensajeGeneral.innerHTML = "";
+    mensajeGeneral.setAttribute("class","estilo-mensaje");
     listaAceptados.innerHTML = "";
     listaRechazados.innerHTML = "";
     resumen.innerHTML = "";
@@ -44,6 +45,8 @@ btnImportar.addEventListener("click",()=>{
         const {aceptados, rechazados} = procesarLote(objetoConvertido.productos);
         productosAceptados(aceptados);
         productosRechazados(rechazados);
+        aplicarFiltro();
+        mostrarResumen(aceptados,rechazados);
 
     }catch(error){
         
@@ -81,10 +84,11 @@ function productosAceptados(lista){
     lista.forEach((p, index) => {
         const itemAceptado = document.createElement("div");
         itemAceptado.id = `item-producto-${index+1}`;
+        itemAceptado.setAttribute("class", "tarjeta-producto");
         itemAceptado.innerHTML = `<p>${p.nombre}</p>
             <p>S/. ${p.precio.toFixed(2)}</p>
             <p ${p.stock===0 ? `class=sin-stock`: ""}>Stock: ${p.stock===0 ? "Sin stock" : p.stock}</p>
-            <p class=${p.categoria} >Categoría: ${p.categoria.charAt(0).toUpperCase()+p.categoria.slice(1)}</p>`;
+            <p class="categoria ${p.categoria}" >Categoría: ${p.categoria.charAt(0).toUpperCase()+p.categoria.slice(1)}</p>`;
         listaAceptados.appendChild(itemAceptado);
     });
 }
@@ -102,27 +106,43 @@ function productosRechazados(lista){
 /* Al cambiar la opción del filtro de categoría, solo deben permanecer visibles las tarjetas de productos aceptados de esa categoría (Todas muestra todas). Las demás se ocultan sin eliminarse. Después de cada importación, el filtro que esté seleccionado en ese momento debe seguir aplicándose a las tarjetas recién creadas */
 
 filtroCategoria.addEventListener("change", () => {
-    console.log(filtroCategoria.value);
+    aplicarFiltro();
+});
 
+function aplicarFiltro(){
+    const tarjetas = [...document.querySelectorAll(".tarjeta-producto")];
+    tarjetas.forEach(t => t.style.display = "");
     switch(filtroCategoria.value){
         case "todas":
+            tarjetas.forEach(t => t.style.display = "");
             break;
         case "accesorios":
-            
+            const itemsNoAccesorios = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("accesorios"));
+            itemsNoAccesorios.forEach(i => i.style.display = "none");
             break;
         case "audio":
+            const itemsNoAudio = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("audio"));
+            itemsNoAudio.forEach(i => i.style.display = "none");
             break;
         case "computo":
+            const itemsNoComputo = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("computo"));
+            itemsNoComputo.forEach(i => i.style.display = "none");
             break;
         default:
             mensajeGeneral.innerHTML = "<p>Categoria no encontrada</p>";
             break;
     }
-})
+}
 
 /* El resumen (que no cambia con el filtro) muestra, con este formato:
     Aceptados: 3 | Rechazados: 6 | Valor total del inventario aceptado: S/. 8046.00 | Producto más caro: Laptop
-
 El valor total es la suma de precio × stock de todos los aceptados, con 2 decimales. El producto más caro es el aceptado con mayor precio (si hay empate, el primero de la lista). Si no hay ningún producto aceptado, el resumen muestra solo las cantidades de aceptados y rechazados, sin valor total ni producto más caro */
+
+function mostrarResumen(aceptados, rechazados){
+    const valorTotal = aceptados.reduce((acumulado,a) => (a.precio*a.stock) + acumulado, 0);
+    const precioMaximo = Math.max(...aceptados.map(a => a.precio));
+    const productoMasCaro = aceptados.find(a => a.precio === precioMaximo);
+    resumen.textContent = `Aceptados: ${aceptados.length} | Rechazados: ${rechazados.length} ${aceptados.length>0?`| Valor total del inventario aceptado: S/. ${valorTotal.toFixed(2)} | Producto más caro: ${productoMasCaro.nombre}` : ""}`;
+}
 
 /* Comprobación de la rama inesperada: introduce temporalmente un error de escritura en el nombre de una variable dentro de procesarLote, confirma que aparece el mensaje genérico y que el detalle sale en consola, y luego corrígelo */
