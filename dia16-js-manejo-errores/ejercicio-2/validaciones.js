@@ -22,20 +22,20 @@ export function validarProducto(producto){
     if(typeof producto.nombre !== "string" || producto.nombre.trim() === "" || producto.nombre === null){
         throw new Error("El nombre del producto no es válido");
     }
-    if(isNaN(parseFloat(producto.precio))){
+    if(typeof producto.precio !== "number" || isNaN(producto.precio)){
         throw new TypeError("El precio debe ser un número");
     }
     if(producto.precio<=0){
         throw new RangeError("El precio debe ser mayor a 0");
     }
-    if(isNaN(parseInt(producto.stock))  || !Number.isInteger(Number(producto.stock))){
-        throw new TypeError("El stock debe ser un número entero");
+    if(isNaN(producto.stock) || typeof producto.stock !== "number"){
+        throw new TypeError("El stock debe ser un número");
     }
-    if(Number(producto.stock)<0){
+    if(producto.stock<0){
         throw new RangeError("El stock no puede ser negativo");
     }
     if(!categoriasPermitidas.some(c => (producto.categoria === c)) ){
-        throw new Error(`La categoría ${producto.categoria} no está permitida`);
+        throw new Error(`La categoría "${producto.categoria}" no está permitida`);
     }
     return true;
 }

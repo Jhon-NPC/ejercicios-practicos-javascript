@@ -35,10 +35,10 @@ btnImportar.addEventListener("click",()=>{
     listaRechazados.innerHTML = "";
     resumen.innerHTML = "";
     try{
-        parrafoEstado.textContent = "Importando";
+        parrafoEstado.textContent = "Importando...";
         const objetoConvertido = JSON.parse(textoEntrada.value);
 
-        if(!objetoConvertido.hasOwnProperty("productos")){
+        if(objetoConvertido === null || !objetoConvertido.hasOwnProperty("productos")){
             throw new Error("El JSON no contiene la propiedad productos");
         }
 
@@ -63,8 +63,8 @@ btnImportar.addEventListener("click",()=>{
             mensajeGeneral.innerHTML = `<p>${error.message}</p>`
             console.error(error);
         }else{
-            mensajeGeneral.innerHTML = `<p>Ocurrió un error inesperado. Revisa la consola</p>`
-            console.error(error.message);
+            mensajeGeneral.innerHTML = `<p>Ocurrió un error inesperado. Revisa la consola.</p>`
+            console.error(error);
         }
     }finally{
         parrafoEstado.textContent = "Importación terminada";
@@ -111,27 +111,33 @@ filtroCategoria.addEventListener("change", () => {
 
 function aplicarFiltro(){
     const tarjetas = [...document.querySelectorAll(".tarjeta-producto")];
-    tarjetas.forEach(t => t.style.display = "");
+    tarjetas.forEach(t => {
+        const coincide = filtroCategoria.value === "todas" || t.querySelector(".categoria").classList.contains(filtroCategoria.value);
+        t.style.display = coincide ? "" : "none";
+    });
+
+    /* OTRA FORMA DE FILTRAR POR CATEGORIA
     switch(filtroCategoria.value){
-        case "todas":
-            tarjetas.forEach(t => t.style.display = "");
-            break;
-        case "accesorios":
-            const itemsNoAccesorios = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("accesorios"));
-            itemsNoAccesorios.forEach(i => i.style.display = "none");
-            break;
-        case "audio":
-            const itemsNoAudio = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("audio"));
-            itemsNoAudio.forEach(i => i.style.display = "none");
-            break;
-        case "computo":
-            const itemsNoComputo = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("computo"));
-            itemsNoComputo.forEach(i => i.style.display = "none");
-            break;
-        default:
-            mensajeGeneral.innerHTML = "<p>Categoria no encontrada</p>";
-            break;
-    }
+        case "todas":
+            tarjetas.forEach(t => t.style.display = "");
+            break;
+        case "accesorios":
+            const itemsNoAccesorios = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("accesorios"));
+            itemsNoAccesorios.forEach(i => i.style.display = "none");
+            break;
+        case "audio":
+            const itemsNoAudio = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("audio"));
+            itemsNoAudio.forEach(i => i.style.display = "none");
+            break;
+        case "computo":
+            const itemsNoComputo = tarjetas.filter(t => !t.querySelector(".categoria").classList.contains("computo"));
+            itemsNoComputo.forEach(i => i.style.display = "none");
+            break;
+        default:
+            mensajeGeneral.innerHTML = "<p>Categoria no encontrada</p>";
+            break;
+    }
+    */
 }
 
 /* El resumen (que no cambia con el filtro) muestra, con este formato:
@@ -145,4 +151,16 @@ function mostrarResumen(aceptados, rechazados){
     resumen.textContent = `Aceptados: ${aceptados.length} | Rechazados: ${rechazados.length} ${aceptados.length>0?`| Valor total del inventario aceptado: S/. ${valorTotal.toFixed(2)} | Producto más caro: ${productoMasCaro.nombre}` : ""}`;
 }
 
-/* Comprobación de la rama inesperada: introduce temporalmente un error de escritura en el nombre de una variable dentro de procesarLote, confirma que aparece el mensaje genérico y que el detalle sale en consola, y luego corrígelo */
+/* TEXTO DE PRUEBA
+{"productos":[
+    {"nombre":"Mouse inalámbrico","precio":45.5,"stock":12,"categoria":"accesorios"},
+    {"nombre":"Audífonos","precio":120,"stock":0,"categoria":"audio"},
+    {"nombre":"   ","precio":30,"stock":5,"categoria":"computo"},
+    {"nombre":"Teclado","precio":"abc","stock":3,"categoria":"accesorios"},
+    {"nombre":"Monitor","precio":-10,"stock":2,"categoria":"computo"},
+    {"nombre":"Cable HDMI","precio":15,"stock":-4,"categoria":"accesorios"},
+    {"nombre":"Silla gamer","precio":300,"stock":2,"categoria":"muebles"},
+    null,
+    {"nombre":"Laptop","precio":2500,"stock":3,"categoria":"computo"}
+]}
+*/
