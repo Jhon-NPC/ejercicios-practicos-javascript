@@ -40,6 +40,7 @@ function mostrarCiudades(){
     console.log(leerCiudad());
 }
 mostrarCiudades();
+console.log(ciudad);
 
 /* Parte C: closures
 Crea una función fábrica crearDescuento(porcentaje) que devuelva una función que reciba un precio y devuelva precio - (precio * porcentaje / 100). Crea descuento10 con 10 y descuento25 con 25. Muestra descuento10(200), descuento25(200) y crearDescuento(50)(80). */
@@ -150,26 +151,77 @@ const {conVar,conLet} = compararBucles();
 console.log(conVar);
 console.log(conLet);
 
-/*
-Parte E: IIFE
+/* Parte E: IIFE
 Resuelve estas tres:
 a) Crea una IIFE que declare const claveInterna = "abc123" y muestre en consola Inicializando.... Después, fuera de ella, intenta mostrar claveInterna dentro de un try...catch, y en el catch muestra error.name
 b) Crea una IIFE con sintaxis de arrow function que reciba nombre y devuelva Usuario: seguido del nombre en mayúsculas. Llámala con "pablo", guarda el resultado en una constante y muéstralo
-c) Crea generarNumeroPedido como una IIFE que mantenga un contador interno ultimo que empieza en 0 y devuelva una función. Cada vez que se llame a generarNumeroPedido(), esta debe devolver PED- seguido del siguiente número. Llámala 3 veces y muestra cada resultado
-*/
+c) Crea generarNumeroPedido como una IIFE que mantenga un contador interno ultimo que empieza en 0 y devuelva una función. Cada vez que se llame a generarNumeroPedido(), esta debe devolver PED- seguido del siguiente número. Llámala 3 veces y muestra cada resultado */
 
-/*
-Parte F: closures en el DOM
-Declara este array:
-js
-    const planes = [
-        { nombre: "Básico", precio: 20 },
-        { nombre: "Pro", precio: 45 },
-        { nombre: "Premium", precio: 80 }
-    ];
+(function(){
+    const claveInterna = "abc123";
+    console.log("Inicializando...");
+})();
+try {
+    console.log(claveInterna);
+} catch (error) {
+    console.error(error.name);
+}
+
+const devolverUsuario = ((nombre)=>{
+    const usuario = nombre.toUpperCase();
+    return usuario;
+})("pablo");
+console.log(`Usuario: ${devolverUsuario}`);
+
+const generarNumeroPedido = (function(){
+    let ultimo = 0;
+    return function(){
+        ultimo += 1;
+        return `PED-${ultimo}`;
+    }
+})();
+
+console.log(generarNumeroPedido());
+console.log(generarNumeroPedido());
+console.log(generarNumeroPedido());
+
+/* Parte F: closures en el DOM
 
 Selecciona los tres botones con querySelectorAll(".boton-plan") y recórrelos con un for que use let i. A cada botón agrégale un listener de "click" que muestre en <p id="mensaje-plan"> este texto (usa la i del bucle directamente; no uses evento.target):
+
 Elegiste el plan [nombre] (opción [número] de [total]): S/. [precio con 2 decimales]
 
-Luego, temporalmente, cambia let i por var i, haz clic en un botón y observa la consola. Escribe como comentario en tu código, con tus palabras, qué error apareció y por qué ocurre (qué valor tiene i cuando ocurre el clic y cuántas i existen). Después vuelve a dejar let.
+Luego, temporalmente, cambia let i por var i, haz clic en un botón y observa la consola. Escribe como comentario en tu código, con tus palabras, qué error apareció y por qué ocurre (qué valor tiene i cuando ocurre el clic y cuántas i existen). Después vuelve a dejar let. */
+
+const planes = [
+    { nombre: "Básico", precio: 20 },
+    { nombre: "Pro", precio: 45 },
+    { nombre: "Premium", precio: 80 }
+];
+
+const botones = document.querySelectorAll(".boton-plan");
+const mensajePlan = document.getElementById("mensaje-plan");
+for(let i=0; i<botones.length;i++){
+    botones[i].addEventListener("click",() => {
+        const plan = planes.find(p => p.nombre === botones[i].textContent.slice(botones[i].textContent.indexOf(" ")+1));
+        mensajePlan.textContent = `Elegiste el plan ${plan.nombre} (opción ${i+1} de ${planes.length}): S/. ${plan.precio.toFixed(2)}`;
+    });
+    console.log(i);
+}
+
+/* 
+for(var i=0; i<botones.length;i++){
+    botones[i].addEventListener("click",() => {
+        const plan = planes.find(p => p.nombre === botones[i].textContent.slice(botones[i].textContent.indexOf(" ")+1));
+        mensajePlan.textContent = `Elegiste el plan ${plan.nombre} (opción [${i+1}] de [${planes.length}]): S/. [${plan.precio.toFixed(2)}]`;
+    });
+    console.log(i);
+} 
+
+dia17.js:205 Uncaught TypeError: Cannot read properties of undefined (reading 'textContent')
+    at dia17.js:205:63
+    at Array.find (<anonymous>)
+    at HTMLButtonElement.<anonymous> (dia17.js:205:29)
+
+El error ocurre porque la variable var i esta cambiando de valor al ultimo dato del bucle for porque la variable var no tiene el scope de bloque por ende ignora el bucle. Una vez asignado el ultimo valor que puede tener i, entonces todos los botones que fueron creados con un evento van a tener el mismo valor de i. Con let i ocurre que por cada iteración del bucle, una nueva i es creada debido a que su scope la mantiene viva dentro del bloque de codigo.
 */
